@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07418D5121CC5C5700BAFC9A /* CustomisedSQLLiteNormalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07418D5021CC5C5700BAFC9A /* CustomisedSQLLiteNormalizedCache.swift */; };
 		1700503B21543E41008B16B6 /* AWSAppSync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DECF5E1F59F5FF004B0512 /* AWSAppSync.framework */; };
 		1700504A21543E7F008B16B6 /* StarWarsAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 1700504821543E7F008B16B6 /* StarWarsAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1700505121543EF8008B16B6 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700505021543EF8008B16B6 /* API.swift */; };
@@ -175,6 +176,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07418D5021CC5C5700BAFC9A /* CustomisedSQLLiteNormalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomisedSQLLiteNormalizedCache.swift; sourceTree = "<group>"; };
 		1700503621543E41008B16B6 /* ApolloTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApolloTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1700503A21543E41008B16B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1700504621543E7F008B16B6 /* StarWarsAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarWarsAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -548,6 +550,7 @@
 				17D2C2061F6F44A3006C6818 /* AWSOfflineMutationStore.swift */,
 				17A7F8C91FB8BCBC008D1393 /* AWSS3ObjectProtocol.swift */,
 				17A2673C1F66465B009E50B7 /* AWSSQLLiteNormalizedCache.swift */,
+				07418D5021CC5C5700BAFC9A /* CustomisedSQLLiteNormalizedCache.swift */,
 				17DECF621F59F5FF004B0512 /* Info.plist */,
 			);
 			path = AWSAppSyncClient;
@@ -929,13 +932,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = SwiftLint;
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1086,6 +1085,7 @@
 				17E009C21FCAB234005031DB /* GraphQLQueryWatcher.swift in Sources */,
 				17E009CB1FCAB234005031DB /* HTTPNetworkTransport.swift in Sources */,
 				17E009D11FCAB234005031DB /* Utilities.swift in Sources */,
+				07418D5121CC5C5700BAFC9A /* CustomisedSQLLiteNormalizedCache.swift in Sources */,
 				17E009DA1FCAB234005031DB /* Result.swift in Sources */,
 				174F80A42107F17700775D0D /* AWSIoTCSR.m in Sources */,
 				179577992149CD1B00C834E1 /* AWSAppSyncRetryHandler.swift in Sources */,
