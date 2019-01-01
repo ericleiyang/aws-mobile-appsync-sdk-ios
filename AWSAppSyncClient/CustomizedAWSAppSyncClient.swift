@@ -8,8 +8,6 @@
 
 import Foundation
 
-class CustomizedAppSyncClientConfiguration: AWSAppSyncClientConfiguration {
-    override init(url: URL, serviceRegion: AWSRegionType, authType: AuthType, apiKeyAuthProvider: AWSAPIKeyAuthProvider?, credentialsProvider: AWSCredentialsProvider?, userPoolsAuthProvider: AWSCognitoUserPoolsAuthProvider?, oidcAuthProvider: AWSOIDCAuthProvider?, urlSessionConfiguration: URLSessionConfiguration, databaseURL: URL?, connectionStateChangeHandler: ConnectionStateChangeHandler?, s3ObjectManager: AWSS3ObjectManager?, presignedURLClient: AWSS3ObjectPresignedURLGenerator?, withCustomizedCache: Bool) throws {
-        
-    }
+class CustomizedAWSAppSyncClient: AWSAppSyncClientConfiguration {
+    
 }
