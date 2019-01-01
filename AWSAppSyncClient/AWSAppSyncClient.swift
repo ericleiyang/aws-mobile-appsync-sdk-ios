@@ -506,6 +506,82 @@ public class AWSAppSyncClientConfiguration {
         self.s3ObjectManager = s3ObjectManager
         self.presignedURLClient = presignedURLClient
     }
+    
+    private init(url: URL,
+                 serviceRegion: AWSRegionType,
+                 authType: AuthType,
+                 apiKeyAuthProvider: AWSAPIKeyAuthProvider? = nil,
+                 credentialsProvider: AWSCredentialsProvider? = nil,
+                 userPoolsAuthProvider: AWSCognitoUserPoolsAuthProvider? = nil,
+                 oidcAuthProvider: AWSOIDCAuthProvider? = nil,
+                 urlSessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default,
+                 databaseURL: URL? = nil,
+                 connectionStateChangeHandler: ConnectionStateChangeHandler? = nil,
+                 s3ObjectManager: AWSS3ObjectManager? = nil,
+                 presignedURLClient: AWSS3ObjectPresignedURLGenerator? = nil,
+                 withCustomizedCache: Bool = true) throws {
+        
+        if withCustomizedCache {
+            
+        }else {
+            try self.init(url: URL(string: appSyncClientInfo.apiUrl)!,
+                          serviceRegion: appSyncClientInfo.region.aws_regionTypeValue(),
+                          authType: authTypeFromConfig,
+                          apiKeyAuthProvider: defaultApiKeyAuthProvider,
+                          credentialsProvider: defaultCredentialsProvider,
+                          userPoolsAuthProvider: userPoolsAuthProvider,
+                          oidcAuthProvider: oidcAuthProvider,
+                          urlSessionConfiguration: urlSessionConfiguration,
+                          databaseURL: databaseURL,
+                          connectionStateChangeHandler: connectionStateChangeHandler,
+                          s3ObjectManager: s3ObjectManager,
+                          presignedURLClient: presignedURLClient)
+        }
+        self.url = url
+        self.region = serviceRegion
+        self.authType = authType
+        
+        // Construct the Network Transport based on the authType selected
+        switch authType {
+        case AuthType.apiKey:
+            self.networkTransport = AWSAppSyncHTTPNetworkTransport(url: url,
+                                                                   apiKeyAuthProvider: apiKeyAuthProvider!,
+                                                                   configuration: urlSessionConfiguration)
+        case AuthType.awsIAM:
+            self.networkTransport = AWSAppSyncHTTPNetworkTransport(url: url,
+                                                                   configuration: urlSessionConfiguration,
+                                                                   region: region,
+                                                                   credentialsProvider: credentialsProvider!)
+        case AuthType.amazonCognitoUserPools:
+            self.networkTransport = AWSAppSyncHTTPNetworkTransport(url: url,
+                                                                   userPoolsAuthProvider: userPoolsAuthProvider!,
+                                                                   configuration: urlSessionConfiguration)
+        case AuthType.oidcToken:
+            self.networkTransport = AWSAppSyncHTTPNetworkTransport(url: url,
+                                                                   oidcAuthProvider: oidcAuthProvider!,
+                                                                   configuration: urlSessionConfiguration)
+        }
+        
+        self.databaseURL = databaseURL
+        self.store = ApolloStore(cache: InMemoryNormalizedCache())
+        self.connectionStateChangeHandler = connectionStateChangeHandler
+        if let databaseURL = databaseURL {
+            do {
+                self.store = try ApolloStore(cache: AWSSQLLiteNormalizedCache(fileURL: databaseURL))
+            } catch {
+                // Use in memory cache (InMemoryNormalizedCache) incase database init fails
+            }
+            do {
+                self.subscriptionMetadataCache = try AWSSubscriptionMetaDataCache(fileURL: databaseURL)
+            } catch {
+                // Use in memory cache incase database init fails
+            }
+        }
+        
+        self.snapshotController = SnapshotProcessController(endpointURL: url)
+        self.s3ObjectManager = s3ObjectManager
+        self.presignedURLClient = presignedURLClient
+    }
 }
 
 /**

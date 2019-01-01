@@ -9,7 +9,7 @@
 import Foundation
 import SQLite
 
-public final class CustomisedSQLLiteNormalizedCache: NormalizedCache {
+public final class CustomizedSQLLiteNormalizedCache: NormalizedCache {
     
     public init(fileURL: URL) throws {
         db = try Connection(.uri(fileURL.absoluteString), readonly: false)
