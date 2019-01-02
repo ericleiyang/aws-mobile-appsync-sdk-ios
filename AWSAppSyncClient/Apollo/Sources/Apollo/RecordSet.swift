@@ -92,13 +92,10 @@ extension RecordSet {
         if var oldRecord = storage.removeValue(forKey: record.key) {
             var changedKeys: Set<CacheKey> = Set()
             
-            if record.fields.contains(where: { (aka) -> Bool in
-                let (key, value) = aka
-                return self.isMostRecentObject(key: key, value: value as? RecordSet.Value, oldValue: oldRecord.fields[key] as? RecordSet.Value)
-            }) {
+            if !self.shouldUpdateData(record: record, oldRecord: oldRecord) {
                 return changedKeys
             }
-
+            
             for (key, value) in record.fields {
                 if let oldValue = oldRecord.fields[key], equals(oldValue, value) {
                     continue
@@ -114,17 +111,22 @@ extension RecordSet {
         }
     }
     
-    private func isMostRecentObject(key: CacheKey, value: RecordSet.Value?, oldValue: RecordSet.Value?) -> Bool {
-        guard key == "updated_at",
-            let date = value as? Date,
-            let oldDate = oldValue as? Date else {
-                return false
-        }
+    private func shouldUpdateData(record: Record, oldRecord: Record) -> Bool {
+        let updatedAt: String = "updated_at"
         
-        
-        if  date.compare(oldDate) == .orderedDescending {
-            return true
+        if record.fields.keys.contains(where: { (key) -> Bool in
+            return key == updatedAt
+        }) {
+            if let date = record.fields[updatedAt] as? Date, let oldDate = oldRecord.fields[updatedAt] as? Date {
+                if date.compare(oldDate) == .orderedDescending {
+                    return true
+                }else if date.compare(oldDate) == .orderedSame {
+                    //compare hash
+                }else {
+                    return false
+                }
+            }
         }
-        return false
+        return true
     }
 }
