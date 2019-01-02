@@ -12,7 +12,10 @@ private_repo="${git_url}/${private_user}/${private_name}.git"
 
 git remote add "public" "${public_repo}"
 git branch -r
-git checkout -b master --track origin/master
-git merge orgin/master
-git push master origin/master
+git checkout -b public_master --track remotes/public/master
+git pull
+git checkout -b master --track remotes/origin/master
+git pull
+git merge public_master
+git push origin master
 
