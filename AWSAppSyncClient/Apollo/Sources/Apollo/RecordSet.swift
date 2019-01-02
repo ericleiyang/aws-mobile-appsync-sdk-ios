@@ -121,7 +121,7 @@ extension RecordSet {
                 if date.compare(oldDate) == .orderedDescending {
                     return true
                 }else if date.compare(oldDate) == .orderedSame {
-                    //compare hash
+                    return true
                 }else {
                     return false
                 }
