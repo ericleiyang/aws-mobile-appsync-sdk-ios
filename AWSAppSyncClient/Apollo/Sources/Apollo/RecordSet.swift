@@ -75,3 +75,56 @@ extension RecordSet: CustomPlaygroundQuickLookable {
     return .text(description)
   }
 }
+
+///  Customize recordSet for merging the latest data
+extension RecordSet {
+    @discardableResult public mutating func mergeWithLatest(records: RecordSet) -> Set<CacheKey> {
+        var changedKeys: Set<CacheKey> = Set()
+        
+        for (_, record) in records.storage {
+            changedKeys.formUnion(mergeWithLatest(record: record))
+        }
+        
+        return changedKeys
+    }
+    
+    @discardableResult public mutating func mergeWithLatest(record: Record) -> Set<CacheKey> {
+        if var oldRecord = storage.removeValue(forKey: record.key) {
+            var changedKeys: Set<CacheKey> = Set()
+            
+            if record.fields.contains(where: { (aka) -> Bool in
+                let (key, value) = aka
+                return self.isMostRecentObject(key: key, value: value as? RecordSet.Value, oldValue: oldRecord.fields[key] as? RecordSet.Value)
+            }) {
+                return changedKeys
+            }
+
+            for (key, value) in record.fields {
+                if let oldValue = oldRecord.fields[key], equals(oldValue, value) {
+                    continue
+                }
+                oldRecord[key] = value
+                changedKeys.insert([record.key, key].joined(separator: "."))
+            }
+            storage[record.key] = oldRecord
+            return changedKeys
+        } else {
+            storage[record.key] = record
+            return Set(record.fields.keys.map { [record.key, $0].joined(separator: ".") })
+        }
+    }
+    
+    private func isMostRecentObject(key: CacheKey, value: RecordSet.Value?, oldValue: RecordSet.Value?) -> Bool {
+        guard key == "updated_at",
+            let date = value as? Date,
+            let oldDate = oldValue as? Date else {
+                return false
+        }
+        
+        
+        if  date.compare(oldDate) == .orderedDescending {
+            return true
+        }
+        return false
+    }
+}
