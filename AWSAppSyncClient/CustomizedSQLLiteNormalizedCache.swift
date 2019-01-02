@@ -59,7 +59,7 @@ public final class CustomizedSQLLiteNormalizedCache: NormalizedCache {
     
     private func mergeRecords(records: RecordSet) throws -> Set<CacheKey> {
         var recordSet = RecordSet(records: try selectRecords(forKeys: records.keys))
-        let changedFieldKeys = recordSet.merge(records: records)
+        let changedFieldKeys = recordSet.mergeWithLatest(records: records)
         let changedRecordKeys = changedFieldKeys.map { recordCacheKey(forFieldCacheKey: $0) }
         for recordKey in Set(changedRecordKeys) {
             if let recordFields = recordSet[recordKey]?.fields {
