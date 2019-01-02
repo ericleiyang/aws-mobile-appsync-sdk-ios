@@ -117,7 +117,12 @@ extension RecordSet {
         if record.fields.keys.contains(where: { (key) -> Bool in
             return key == updatedAt
         }) {
-            if let date = record.fields[updatedAt] as? Date, let oldDate = oldRecord.fields[updatedAt] as? Date {
+            if let timestamp = record.fields[updatedAt] as? Double,
+                let oldTimestamp = oldRecord.fields[updatedAt] as? Double{
+               
+                let date = Date(timeIntervalSince1970: TimeInterval(timestamp/1000))
+                let oldDate = Date(timeIntervalSince1970: TimeInterval(oldTimestamp/1000))
+                
                 if date.compare(oldDate) == .orderedDescending {
                     return true
                 }else if date.compare(oldDate) == .orderedSame {
